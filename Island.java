@@ -1,19 +1,23 @@
 import java.lang.Math;
+
 public class Island {
 
 // island stats
+   public static double ship_range = 1.00;
+   public static double plane_range = 2.0;
+
    public int strength;
    public String owner;
    public double x;
    public double y;
-   public static double ship_range = 1.00;
-   public static double plane_range = 2.0;
+   public boolean turn_done;
 
    public Island (double xx, double yy) {
       strength = 0;
       owner = "neutral";
       x = xx;
       y = yy;
+      turn_done = false;
    }
    
    public double distanceTo (Island other){
@@ -34,6 +38,7 @@ public class Island {
             other.strength = 5;
             System.out.println(owner + ", you now own island" + other);
          }
+         turn_done = true;
       }
       else 
       {
@@ -46,6 +51,7 @@ public class Island {
       {
          other.strength -= 1;
          System.out.println("you hit your target, it's strength is now " + other.strength);
+         turn_done = true;
       }
       else
       {
@@ -61,6 +67,7 @@ public class Island {
    }
    
    public String toString() {
-      return String.format("[(%f, %f) strength=%d owner=%s]", x, y, strength, owner); 
+      String done = turn_done ? "*" : " ";
+      return String.format("[(%f, %f) %s str=%d owner=%s]", x, y, done, strength, owner); 
    }
 }
