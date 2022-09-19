@@ -1,15 +1,22 @@
 //package com.daemacles;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.TexturePaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.event.MouseInputListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,23 +27,28 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.ImageIcon;
 
 class Surface extends JPanel implements ActionListener {
 
-   private final int DELAY = 150;
+   private final int DELAY = 33; // 1000/33 = 30 frames per second
    private Timer timer;
 
-   private BufferedImage tree;
-   private BufferedImage bush;
-   private BufferedImage wall;
+   //private BufferedImage wall;
+   //private TexturePaint wall_p;
 
-   private TexturePaint tree_p;
-   private TexturePaint bush_p;
-   private TexturePaint wall_p;
+   private ImageIcon tree;
+
+   private int x = 10;
+   private int y = 10;
 
    public Surface() {
       initTimer();
       loadImages();
+
+      ImgCursor img_cursor = new ImgCursor();
+      addMouseListener(img_cursor);
+      addMouseMotionListener(img_cursor);
    }
 
    private void initTimer() {
@@ -50,21 +62,21 @@ class Surface extends JPanel implements ActionListener {
 
    private void loadImages() {
       try {
-         tree = ImageIO.read(new File("sprites/tree.png"));
-         bush = ImageIO.read(new File("sprites/bush.png"));
-         wall = ImageIO.read(new File("sprites/wall.png"));
+         tree = new ImageIcon("sprites/tree.png");
 
-         tree_p = new TexturePaint(tree, new Rectangle(0, 0, tree.getWidth(), tree.getHeight()));
-         bush_p = new TexturePaint(bush, new Rectangle(0, 0, bush.getWidth(), bush.getHeight()));
-         wall_p = new TexturePaint(wall, new Rectangle(0, 0, wall.getWidth(), wall.getHeight()));
+         //wall = ImageIO.read(new File("sprites/wall.png"));
+         //wall_p = new TexturePaint(wall, new Rectangle(0, 0, wall.getWidth(), wall.getHeight()));
       } catch(IOException ex) {
          Logger.getLogger(Surface.class.getName()).log(
                Level.SEVERE, null, ex);
       }
+
+      
    }
    
    private void doDrawing(Graphics g) {
       Graphics2D g2d = (Graphics2D) g.create();
+
       //g2d.drawString("Java 2D", 50, 50);
       //g2d.setPaint(Color.blue);
 
@@ -78,8 +90,9 @@ class Surface extends JPanel implements ActionListener {
       //   int y = Math.abs(r.nextInt()) % h;
       //   g2d.drawLine(x, y, x, y);
       //}
-      g2d.setPaint(tree_p);
-      g2d.fillRect(10, 15, 90, 60);
+
+      //                             ,-destination---. ,-source-------.
+      g2d.drawImage(tree.getImage(), x, y, x+30, y+30, x, y, x+30, y+30, this);
 
       g2d.setPaint(bush_p);
       g2d.fillRect(130, 15, 90, 60);
@@ -99,6 +112,26 @@ class Surface extends JPanel implements ActionListener {
    @Override
    public void actionPerformed(ActionEvent e) {
       repaint();
+   }
+
+   class ImgCursor implements MouseInputListener {
+      public void mouseEntered(MouseEvent e)
+      {}
+      public void mousePressed(MouseEvent e)
+      {}
+      public void mouseClicked(MouseEvent e)
+      {}
+      public void mouseReleased(MouseEvent e)
+      {}
+      public void mouseExited(MouseEvent e)
+      {}
+      public void mouseDragged(MouseEvent e)
+      {}
+      public void mouseMoved(MouseEvent e)
+      {
+         x = e.getX();
+         y = e.getY();
+      }
    }
 }
 
