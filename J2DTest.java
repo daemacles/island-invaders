@@ -128,6 +128,8 @@ class Surface extends JPanel implements ActionListener {
     //                             ,-destination---. ,-source-------.
     g2d.drawImage(tree.getImage(), x, y, x + 30, y + 30, x, y, x + 30, y + 30, this);
 
+    bush.doDrawing(g);
+
     // g2d.setPaint(wall_p);
     // g2d.fillRect(250, 15, 90, 60);
 
@@ -147,9 +149,14 @@ class Surface extends JPanel implements ActionListener {
 
   class ImgCursor implements MouseInputListener {
     public void mouseEntered(MouseEvent e) {}
-    public void mousePressed(MouseEvent e) {}
-    public void mouseClicked(MouseEvent e) {}
-    public void mouseReleased(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+      bush.setLocation(e.getX(), e.getY());
+    }
+    public void mouseClicked(MouseEvent e) {
+    }
+    public void mouseReleased(MouseEvent e) {
+      bush.setActive(bush.getLocation().contains(e.getX(), e.getY()));
+    }
     public void mouseExited(MouseEvent e) {}
     public void mouseDragged(MouseEvent e) {}
     public void mouseMoved(MouseEvent e) {
